@@ -29,13 +29,13 @@ const CamerasReducer = (state: ContextState, action: CamerasActions): ContextSta
       }
 
     case 'EDIT_CAMERA':
-      const index = state.cameras.findIndex(item => item._id === action.payload._id)
+      const found =  state.cameras.find(item => item._id === action.payload._id)
 
       return {
         ...state,
         cameras: state.cameras.map(camera => {
-          if(camera._id === action.payload._id) {
-            Object.assign(state.cameras[index], action.payload)
+          if(found) {
+            Object.assign(found, action.payload)
 
             return {
               ...camera
