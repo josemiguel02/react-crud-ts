@@ -4,6 +4,7 @@ import { Camera } from '../interfaces'
 import { deleteCamera } from '../services'
 import { Dialog } from './Dialog'
 import { Modal } from './Modal'
+import { BASE_URL } from '../utils/base-url'
 
 interface CamerasItemProps {
   camera: Camera
@@ -38,7 +39,7 @@ export const CamerasItem: FC<CamerasItemProps> = ({ camera }) => {
       <tr className='border-b odd:bg-white even:bg-gray-100 odd:bg-white even:bg-gray-50 border-gray-50'>
         <td className='py-4 px-6 text-sm'>
           <img
-            src={image}
+            src={`${BASE_URL}/${image}`}
             alt={name}
             className='h-10 w-10 object-cover rounded-full'
           />
