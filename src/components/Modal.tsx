@@ -2,8 +2,9 @@ import { FC, FormEvent, useState } from 'react'
 import { useCameras } from '../hooks/useCameras'
 import { useForm } from '../hooks/useForm'
 import { Camera } from '../interfaces'
-import { addCamera, editCamera } from '../services'
+import { addCamera, editCamera, sendFile } from '../services'
 import { Button } from './Button'
+import { FileInput } from './FileInput'
 import { RawModal } from './RawModal'
 import { TextInput } from './TextInput'
 
@@ -17,6 +18,8 @@ export const Modal: FC<ModalProps> = ({ onClose, isEdit, item }) => {
   const [isValid, setIsValid] = useState(false)
   const [btnLoading, setBtnLoading] = useState(false)
   const [error, setError] = useState(false)
+  const [imgPath, setImgPath] = useState({} as File)
+  const [imgPreview, setImgPreview] = useState<ArrayBuffer | string>('')
 
   const { dispatch } = useCameras()
 
@@ -33,22 +36,21 @@ export const Modal: FC<ModalProps> = ({ onClose, isEdit, item }) => {
   const handlerAdd = async (e: FormEvent) => {
     e.preventDefault()
 
-    if (name !== '' && model !== '' && brand !== '' && price !== 0) {
+    if (
+      name !== '' &&
+      model !== '' &&
+      brand !== '' &&
+      price !== '' &&
+      imgPath instanceof File
+    ) {
       setBtnLoading(true)
       setIsValid(false)
       setError(false)
 
-      const { error, dataCamera } = await addCamera({
-        name,
-        model,
-        brand,
-        connection_type,
-        price
-      })
+      const { error, dataCamera } = await addCamera(values, imgPath)
 
       if (!error) {
         dispatch({ type: 'ADD_CAMERA', payload: dataCamera })
-
         onClose()
         return
       }
@@ -64,13 +66,23 @@ export const Modal: FC<ModalProps> = ({ onClose, isEdit, item }) => {
 
   const handlerEdit = async (e: FormEvent) => {
     e.preventDefault()
-    if (name !== '' && model !== '' && brand !== '' && price !== 0) {
+
+    if (
+      name !== '' &&
+      model !== '' &&
+      brand !== '' &&
+      price !== '' &&
+      imgPath instanceof File
+    ) {
       setBtnLoading(true)
       setIsValid(false)
       setError(false)
 
-      // Do something with the data
-      const { error, dataCamera } = await editCamera(item?._id!, values)
+      const { error, dataCamera } = await editCamera(
+        item?._id!,
+        values,
+        imgPath
+      )
 
       if (!error) {
         dispatch({
@@ -140,6 +152,30 @@ export const Modal: FC<ModalProps> = ({ onClose, isEdit, item }) => {
           <option value='ETHERNET'>Ethernet</option>
           <option value='IP'>IP</option>
         </select>
+
+        <FileInput
+          name={imgPath.name ? imgPath.name : 'Choose a image'}
+          imgSelected={imgPreview}
+        >
+          <input
+            className='h-full w-full opacity-0'
+            type='file'
+            name='image'
+            onChange={({ target }) => {
+              if (target.files && target.files[0]) {
+                setImgPath(target.files[0])
+
+                // Select the image
+                const reader = new FileReader()
+                reader.onload = () => {
+                  setImgPreview(reader.result!)
+                }
+
+                reader.readAsDataURL(target.files[0])
+              }
+            }}
+          />
+        </FileInput>
 
         {/* Validation and Errors */}
         {isValid && (
