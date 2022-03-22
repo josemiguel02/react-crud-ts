@@ -1,16 +1,17 @@
 export interface Camera {
-  _id?: string
+  _id: string
   name: string
   brand: string
   model: string
   price: number | string
   connection_type: 'WIFI' | 'ETHERNET' | 'IP'
-  image?: string
+  image: string
   createdAt?: string
-  __v?: number
+  __v: number
 }
 
 export type Cameras = Array<Camera>
+export type CameraDTO = Omit<Camera, '_id' | 'image' | 'createdAt' | '__v'>
 
 export interface ContextState {
   cameras: Cameras

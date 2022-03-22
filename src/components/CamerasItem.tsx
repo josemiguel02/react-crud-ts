@@ -23,10 +23,10 @@ export const CamerasItem: FC<CamerasItemProps> = ({ camera }) => {
     setBtnLoading(true)
     setError(false)
 
-    const { error } = await deleteCamera(_id!)
+    const { error } = await deleteCamera(_id)
 
     if (!error) {
-      dispatch({ type: 'DELETE_CAMERA', payload: _id! })
+      dispatch({ type: 'DELETE_CAMERA', payload: _id })
       return
     }
 

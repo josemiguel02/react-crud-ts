@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Camera } from '../interfaces'
+import { Camera, CameraDTO } from '../interfaces'
 import { API_URL } from '../utils/base-url'
 
-export const addCamera = async (newCamera: Camera, image: File) => {
+export const addCamera = async (newCamera: CameraDTO, image: File) => {
   const result = { dataCamera: {} as Camera, error: false }
 
   const { name, model, brand, connection_type, price } = newCamera
@@ -27,7 +27,7 @@ export const addCamera = async (newCamera: Camera, image: File) => {
 
 export const editCamera = async (
   id: string,
-  cameraEdited: Camera,
+  cameraEdited: CameraDTO,
   image: File
 ) => {
   const result = { dataCamera: {} as Camera, error: false }

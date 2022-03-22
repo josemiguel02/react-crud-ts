@@ -1,7 +1,7 @@
 import { FC, FormEvent, useState } from 'react'
 import { useCameras } from '../hooks/useCameras'
 import { useForm } from '../hooks/useForm'
-import { Camera } from '../interfaces'
+import { Camera, CameraDTO } from '../interfaces'
 import { addCamera, editCamera } from '../services'
 import { Button } from './Button'
 import { FileInput } from './FileInput'
@@ -23,7 +23,7 @@ export const Modal: FC<ModalProps> = ({ onClose, isEdit, item }) => {
 
   const { dispatch } = useCameras()
 
-  const { values, handlerChange } = useForm<Camera>({
+  const { values, handlerChange } = useForm<CameraDTO>({
     name: isEdit ? item!.name : '',
     model: isEdit ? item!.model : '',
     brand: isEdit ? item!.brand : '',
